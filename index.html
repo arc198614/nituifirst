@@ -41,7 +41,7 @@
                     </div>
                     <div class="officer-text">
                         <span class="badge">मंडळ अधिकारी डेस्क</span>
-                        <h3 id="displayTitle">शेतकऱ्यांसाठी नवीन पीक विमा योजना</h3>
+                        <h3 id="displayTitle" class="skeleton-text" style="min-height: 28px; width: 80%;"></h3>
 
                         <!-- Fixed: Message-specific image now fits in body -->
                         <div id="msgImgContainer"
@@ -50,9 +50,7 @@
                                 style="width: 100%; height: auto; display: block;">
                         </div>
 
-                        <p id="displayContent">नमस्कार, या हंगामासाठी शासनाने नवीन पीक विमा योजना जाहीर केली आहे. सर्व
-                            शेतकऱ्यांनी याचा लाभ
-                            घ्यावा ही विनंती. अधिक माहितीसाठी आपल्या जवळच्या तलाठी कार्यालयाशी संपर्क साधा.</p>
+                        <p id="displayContent" class="skeleton-text" style="min-height: 60px;"></p>
 
                         <div id="videoContainer" style="margin-top: 1rem; display: none;">
                             <a href="#" id="displayVideo" target="_blank" class="read-more"
@@ -96,8 +94,17 @@
                     }
 
                     function applyData(data) {
-                        if (data.title) document.getElementById('displayTitle').innerText = data.title;
-                        if (data.content) document.getElementById('displayContent').innerText = data.content;
+                        if (data.title) {
+                            const titleEl = document.getElementById('displayTitle');
+                            titleEl.innerText = data.title;
+                            titleEl.classList.remove('skeleton-text');
+                            titleEl.style.width = 'auto';
+                        }
+                        if (data.content) {
+                            const contentEl = document.getElementById('displayContent');
+                            contentEl.innerText = data.content;
+                            contentEl.classList.remove('skeleton-text');
+                        }
 
                         if (data.img) {
                             const container = document.getElementById('msgImgContainer');
