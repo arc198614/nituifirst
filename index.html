@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2c3e50">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap"
         rel="stylesheet">
@@ -24,9 +26,10 @@
             <nav class="nav">
                 <ul>
                     <li><a href="#" class="active">मुख्यपृष्ठ</a></li>
-                    <li><a href="#">आमच्याबद्दल</a></li>
-                    <li><a href="#">सेवा</a></li>
-                    <li><a href="#">संपर्क</a></li>
+                    <li><a href="admin.html">प्रशासक</a></li>
+                    <li><button id="notifyBtn"
+                            style="background: none; border: none; font-size: 1.2rem; cursor: pointer; display: none;"
+                            onclick="requestNotificationPermission()">🔔</button></li>
                 </ul>
             </nav>
         </div>
@@ -65,6 +68,25 @@
                     const SUPABASE_URL = 'https://wqiimtgghapvwxsmqpfi.supabase.co';
                     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaWltdGdnaGFwdnd4c21xcGZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2MzkzOTgsImV4cCI6MjA4NDIxNTM5OH0.Xlx4NES8640ufpoa-VqOjHVGxats7qBbsM1vHsnZxII';
                     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+                    // PWA & Notification Logic
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.register('sw.js');
+                    }
+
+                    function requestNotificationPermission() {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === 'granted') {
+                                alert('नोटीफिकेशन्स चालू करण्यात आले आहेत!');
+                                document.getElementById('notifyBtn').style.display = 'none';
+                            }
+                        });
+                    }
+
+                    // Show notify button if permission not granted
+                    if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                        document.getElementById('notifyBtn').style.display = 'inline-block';
+                    }
 
                     async function loadOfficerData() {
                         const { data, error } = await supabaseClient
@@ -149,6 +171,14 @@
                             badge.style.background = '#22c55e'; // Green color
                             badge.innerText = '🔔 नवीन अपडेट आले!';
                             badge.style.transition = 'all 0.3s ease';
+
+                            // System Notification
+                            if (Notification.permission === 'granted') {
+                                new Notification('खेर्डा राजस्व मंडळ', {
+                                    body: 'मंडळ अधिकारी डेस्कवर नवीन संदेश आला आहे!',
+                                    icon: 'assets/logo.png'
+                                });
+                            }
 
                             setTimeout(() => {
                                 badge.style.background = originalColor;
