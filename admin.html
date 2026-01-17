@@ -11,6 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .admin-main {
             padding: 4rem 0;
@@ -168,30 +169,29 @@
     </footer>
 
     <script>
+        const SUPABASE_URL = 'https://wqiimtgghapvwxsmqpfi.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaWltdGdnaGFwdnd4c21xcGZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2MzkzOTgsImV4cCI6MjA4NDIxNTM5OH0.Xlx4NES8640ufpoa-VqOjHVGxats7qBbsM1vHsnZxII';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         const adminForm = document.getElementById('adminForm');
         const livePreview = document.getElementById('livePreview');
         const imgAdjustments = document.getElementById('imageAdjustments');
         const videoAdjustments = document.getElementById('videoAdjustments');
 
-        // Update Preview Real-time
         function updatePreview() {
             document.getElementById('prevTitle').innerText = document.getElementById('msgTitle').value;
             document.getElementById('prevContent').innerText = document.getElementById('msgContent').value;
-
             const size = document.getElementById('imgSize').value;
             const ratio = document.getElementById('imgRatio').value;
             const container = document.getElementById('prevImgContainer');
-
             document.getElementById('sizeVal').innerText = size;
             container.style.width = size + '%';
             container.style.margin = '0 auto 1rem auto';
-
             if (ratio === 'original') {
                 container.style.aspectRatio = 'auto';
             } else {
                 container.style.aspectRatio = ratio.replace('/', ' / ');
             }
-
             if (document.getElementById('msgTitle').value || document.getElementById('msgContent').value || document.getElementById('prevImg').src) {
                 livePreview.style.display = 'block';
             }
@@ -215,15 +215,14 @@
         });
 
         document.getElementById('msgVideo').addEventListener('input', function (e) {
-            if (e.target.value) {
-                videoAdjustments.style.display = 'block';
-            } else {
-                videoAdjustments.style.display = 'none';
-            }
+            videoAdjustments.style.display = e.target.value ? 'block' : 'none';
         });
 
-        adminForm.addEventListener('submit', function (e) {
+        adminForm.addEventListener('submit', async function (e) {
             e.preventDefault();
+            const submitBtn = document.querySelector('.btn-submit');
+            submitBtn.innerText = 'प्रक्रिया चालू आहे...';
+            submitBtn.disabled = true;
 
             const title = document.getElementById('msgTitle').value;
             const content = document.getElementById('msgContent').value;
@@ -233,20 +232,26 @@
             const imgRatio = document.getElementById('imgRatio').value;
             const imgBase64 = document.getElementById('prevImg').src;
 
-            const data = {
-                title: title,
-                content: content,
-                video: video,
-                videoSize: videoSize,
-                img: imgBase64.startsWith('data:') ? imgBase64 : null,
-                imgSize: imgSize,
-                imgRatio: imgRatio,
-                timestamp: new Date().toISOString()
-            };
+            const { error } = await supabase
+                .from('officer_messages')
+                .insert([{
+                    title: title,
+                    content: content,
+                    video_url: video,
+                    video_size: videoSize,
+                    image_data: imgBase64.startsWith('data:') ? imgBase64 : null,
+                    image_size: imgSize,
+                    image_ratio: imgRatio
+                }]);
 
-            localStorage.setItem('officerDeskData', JSON.stringify(data));
-            alert('संदेश यशस्वीरित्या जतन केला आहे!');
-            window.location.href = 'index.html';
+            if (error) {
+                alert('त्रुटी: ' + error.message);
+                submitBtn.innerText = 'अपडेट करा';
+                submitBtn.disabled = false;
+            } else {
+                alert('संदेश यशस्वीरित्या जतन केला आहे! आता संपूर्ण जगाला हा बदल दिसेल.');
+                window.location.href = 'index.html';
+            }
         });
     </script>
 </body>

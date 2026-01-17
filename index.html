@@ -11,6 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -63,44 +64,79 @@
                 </section>
 
                 <script>
-                    function loadOfficerData() {
-                        const savedData = localStorage.getItem('officerDeskData');
-                        if (savedData) {
-                            const data = JSON.parse(savedData);
-                            if (data.title) document.getElementById('displayTitle').innerText = data.title;
-                            if (data.content) document.getElementById('displayContent').innerText = data.content;
+                    const SUPABASE_URL = 'https://wqiimtgghapvwxsmqpfi.supabase.co';
+                    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaWltdGdnaGFwdnd4c21xcGZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2MzkzOTgsImV4cCI6MjA4NDIxNTM5OH0.Xlx4NES8640ufpoa-VqOjHVGxats7qBbsM1vHsnZxII';
+                    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-                            // Apply Size and Ratio
-                            if (data.img) {
-                                const container = document.getElementById('msgImgContainer');
-                                const img = document.getElementById('displayMsgImg');
-                                container.style.display = 'block';
-                                img.src = data.img;
-                                container.style.width = (data.imgSize || 100) + '%';
-                                container.style.margin = '1rem auto';
+                    async function loadOfficerData() {
+                        const { data, error } = await supabase
+                            .from('officer_messages')
+                            .select('*')
+                            .order('created_at', { ascending: false })
+                            .limit(1)
+                            .maybeSingle();
 
-                                if (data.imgRatio && data.imgRatio !== 'original') {
-                                    container.style.aspectRatio = data.imgRatio.replace('/', ' / ');
-                                    img.style.height = '100%';
-                                    img.style.objectFit = 'cover';
-                                } else {
-                                    container.style.aspectRatio = 'auto';
-                                }
-                            } else {
-                                document.getElementById('msgImgContainer').style.display = 'none';
-                            }
+                        if (error) {
+                            console.error('Error fetching data:', error);
+                            const savedData = localStorage.getItem('officerDeskData');
+                            if (savedData) applyData(JSON.parse(savedData));
+                            return;
+                        }
 
-                            if (data.video) {
-                                const vContainer = document.getElementById('videoContainer');
-                                vContainer.style.display = 'block';
-                                document.getElementById('displayVideo').href = data.video;
-                                vContainer.style.width = (data.videoSize || 100) + '%';
-                                vContainer.style.margin = '1rem auto 0 auto';
-                            } else {
-                                document.getElementById('videoContainer').style.display = 'none';
-                            }
+                        if (data) {
+                            applyData({
+                                title: data.title,
+                                content: data.content,
+                                img: data.image_data,
+                                imgSize: data.image_size,
+                                imgRatio: data.image_ratio,
+                                video: data.video_url,
+                                videoSize: data.video_size
+                            });
                         }
                     }
+
+                    function applyData(data) {
+                        if (data.title) document.getElementById('displayTitle').innerText = data.title;
+                        if (data.content) document.getElementById('displayContent').innerText = data.content;
+
+                        if (data.img) {
+                            const container = document.getElementById('msgImgContainer');
+                            const img = document.getElementById('displayMsgImg');
+                            container.style.display = 'block';
+                            img.src = data.img;
+                            container.style.width = (data.imgSize || 100) + '%';
+                            container.style.margin = '1rem auto';
+
+                            if (data.imgRatio && data.imgRatio !== 'original') {
+                                container.style.aspectRatio = data.imgRatio.replace('/', ' / ');
+                                img.style.height = '100%';
+                                img.style.objectFit = 'cover';
+                            } else {
+                                container.style.aspectRatio = 'auto';
+                            }
+                        } else {
+                            document.getElementById('msgImgContainer').style.display = 'none';
+                        }
+
+                        if (data.video) {
+                            const vContainer = document.getElementById('videoContainer');
+                            vContainer.style.display = 'block';
+                            document.getElementById('displayVideo').href = data.video;
+                            vContainer.style.width = (data.videoSize || 100) + '%';
+                            vContainer.style.margin = '1rem auto 0 auto';
+                        } else {
+                            document.getElementById('videoContainer').style.display = 'none';
+                        }
+                    }
+
+                    supabase
+                        .channel('public:officer_messages')
+                        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'officer_messages' }, payload => {
+                            loadOfficerData();
+                        })
+                        .subscribe();
+
                     window.addEventListener('DOMContentLoaded', loadOfficerData);
                 </script>
                 <section class="card glass-card">
