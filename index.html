@@ -158,33 +158,34 @@
                         }
                     }
 
+                    // Clear badge when user opens/focuses the app
+                    if ('clearAppBadge' in navigator) {
+                        navigator.clearAppBadge();
+                        window.addEventListener('focus', () => navigator.clearAppBadge());
+                    }
+
                     supabaseClient
                         .channel('public:officer_messages')
                         .on('postgres_changes', { event: '*', schema: 'public', table: 'officer_messages' }, payload => {
                             console.log('New update received!', payload);
 
-                            // Visual notification
-                            const badge = document.querySelector('.badge');
-                            const originalText = badge.innerText;
-                            const originalColor = badge.style.background;
-
-                            badge.style.background = '#22c55e'; // Green color
-                            badge.innerText = '🔔 नवीन अपडेट आले!';
-                            badge.style.transition = 'all 0.3s ease';
-
-                            // System Notification
+                            // 1. System Notification (Mobile Flash Message)
                             if (Notification.permission === 'granted') {
+                                const newTitle = payload.new?.title || 'नवीन संदेश';
                                 new Notification('खेर्डा राजस्व मंडळ', {
-                                    body: 'मंडळ अधिकारी डेस्कवर नवीन संदेश आला आहे!',
-                                    icon: 'assets/logo.png'
+                                    body: `अपडेट: ${newTitle}`,
+                                    icon: 'assets/logo.png',
+                                    badge: 'assets/logo.png',
+                                    vibrate: [200, 100, 200]
                                 });
                             }
 
-                            setTimeout(() => {
-                                badge.style.background = originalColor;
-                                badge.innerText = originalText;
-                            }, 3000);
+                            // 2. App Icon Badge (Red dot on icon)
+                            if ('setAppBadge' in navigator) {
+                                navigator.setAppBadge(1).catch(e => console.error(e));
+                            }
 
+                            // Refresh content
                             loadOfficerData();
                         })
                         .subscribe();
