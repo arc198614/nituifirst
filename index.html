@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="mr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>खेर्डा राजस्व मंडळ</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header class="glass-header">
+        <div class="container header-content">
+            <div class="logo-wrapper">
+                <img src="public/logo.png" alt="Logo" class="logo">
+                <h1 class="title">खेर्डा राजस्व मंडळ</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="#" class="active">मुख्यपृष्ठ</a></li>
+                    <li><a href="#">आमच्याबद्दल</a></li>
+                    <li><a href="#">सेवा</a></li>
+                    <li><a href="#">संपर्क</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="content">
+        <div class="container">
+            <div class="stats-grid">
+                <section class="card officer-card">
+                    <div class="officer-img-wrapper">
+                        <img src="public/officer.png" alt="Circle Officer" class="officer-img">
+                    </div>
+                    <div class="officer-text">
+                        <span class="badge">मंडळ अधिकारी डेस्क</span>
+                        <h3 id="displayTitle">शेतकऱ्यांसाठी नवीन पीक विमा योजना</h3>
+
+                        <!-- Fixed: Message-specific image now fits in body -->
+                        <div id="msgImgContainer"
+                            style="display: none; margin: 1rem 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--glass-border);">
+                            <img id="displayMsgImg" src="" alt="Message Content"
+                                style="width: 100%; height: auto; display: block;">
+                        </div>
+
+                        <p id="displayContent">नमस्कार, या हंगामासाठी शासनाने नवीन पीक विमा योजना जाहीर केली आहे. सर्व
+                            शेतकऱ्यांनी याचा लाभ
+                            घ्यावा ही विनंती. अधिक माहितीसाठी आपल्या जवळच्या तलाठी कार्यालयाशी संपर्क साधा.</p>
+
+                        <div id="videoContainer" style="margin-top: 1rem; display: none;">
+                            <a href="#" id="displayVideo" target="_blank" class="read-more"
+                                style="background: var(--accent); color: var(--primary); padding: 0.5rem 1rem; border-radius: 5px; display: inline-block;">व्हिडीओ
+                                पहा 🎥</a>
+                        </div>
+                        <a href="#" class="read-more">पूर्ण वाचा →</a>
+                    </div>
+                </section>
+
+                <script>
+                    function loadOfficerData() {
+                        const savedData = localStorage.getItem('officerDeskData');
+                        if (savedData) {
+                            const data = JSON.parse(savedData);
+                            if (data.title) document.getElementById('displayTitle').innerText = data.title;
+                            if (data.content) document.getElementById('displayContent').innerText = data.content;
+
+                            // Apply Size and Ratio
+                            if (data.img) {
+                                const container = document.getElementById('msgImgContainer');
+                                const img = document.getElementById('displayMsgImg');
+                                container.style.display = 'block';
+                                img.src = data.img;
+                                container.style.width = (data.imgSize || 100) + '%';
+                                container.style.margin = '1rem auto';
+
+                                if (data.imgRatio && data.imgRatio !== 'original') {
+                                    container.style.aspectRatio = data.imgRatio.replace('/', ' / ');
+                                    img.style.height = '100%';
+                                    img.style.objectFit = 'cover';
+                                } else {
+                                    container.style.aspectRatio = 'auto';
+                                }
+                            } else {
+                                document.getElementById('msgImgContainer').style.display = 'none';
+                            }
+
+                            if (data.video) {
+                                const vContainer = document.getElementById('videoContainer');
+                                vContainer.style.display = 'block';
+                                document.getElementById('displayVideo').href = data.video;
+                                vContainer.style.width = (data.videoSize || 100) + '%';
+                                vContainer.style.margin = '1rem auto 0 auto';
+                            } else {
+                                document.getElementById('videoContainer').style.display = 'none';
+                            }
+                        }
+                    }
+                    window.addEventListener('DOMContentLoaded', loadOfficerData);
+                </script>
+                <section class="card glass-card">
+                    <div class="card-icon">📂</div>
+                    <h3>महसूल दस्तऐवज</h3>
+                    <p>सातबारा, ८अ आणि इतर महत्त्वाचे दस्तऐवज मिळवा.</p>
+                </section>
+                <section class="card glass-card">
+                    <div class="card-icon">🤝</div>
+                    <h3>जनसंपर्क</h3>
+                    <p>नागरिकांच्या समस्या आणि तक्रार निवारण विभाग.</p>
+                </section>
+                <section class="card glass-card">
+                    <div class="card-icon">📢</div>
+                    <h3>महत्त्वाच्या सूचना</h3>
+                    <p>शासकीय परिपत्रके आणि नवीन घोषणांची माहिती.</p>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="premium-footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Dnit Office Soutions, Karanja. सर्व हक्क राखीव.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

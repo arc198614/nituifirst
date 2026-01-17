@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="mr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>प्रशासकीय विभाग - खेर्डा राजस्व मंडळ</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .admin-main {
+            padding: 4rem 0;
+            flex: 1;
+        }
+
+        .admin-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 1.1rem;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .preview-area {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="glass-header">
+        <div class="container header-content">
+            <div class="logo-wrapper">
+                <img src="public/logo.png" alt="Logo" class="logo">
+                <h1 class="title">प्रशासकीय विभाग</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">मुख्यपृष्ठ</a></li>
+                    <li><a href="#" class="active">प्रशासक लॉगिन</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <div class="container">
+            <div class="admin-card">
+                <h2>मंडळ अधिकारी डेस्क अपडेट करा</h2>
+                <p style="margin-bottom: 2rem; opacity: 0.7;">येथून आपण मुख्य पृष्ठावरील संदेश अपडेट करू शकता.</p>
+
+                <form id="adminForm">
+                    <div class="form-group">
+                        <label for="msgTitle">विषय / संदेशाचे शीर्षक</label>
+                        <input type="text" id="msgTitle" placeholder="उदा: शेतकरी कल्याणासाठी नवीन उपक्रम">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="msgContent">संदेश मजकूर</label>
+                        <textarea id="msgContent" rows="5" placeholder="आपला संदेश येथे लिहा..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="msgImg">फोटो अपलोड करा</label>
+                        <input type="file" id="msgImg" accept="image/*">
+                    </div>
+
+                    <div id="imageAdjustments"
+                        style="display: none; border: 1px solid #eee; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                        <label style="font-size: 0.9rem; margin-bottom: 1rem;">फोटो ॲडजस्टमेंट</label>
+                        <div class="form-group">
+                            <label style="font-size: 0.8rem; opacity: 0.7;">आकार (Size): <span
+                                    id="sizeVal">100</span>%</label>
+                            <input type="range" id="imgSize" min="50" max="100" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size: 0.8rem; opacity: 0.7;">आस्पेक्ट रेशो (Aspect Ratio)</label>
+                            <select id="imgRatio"
+                                style="padding: 0.5rem; width: 100%; border-radius: 5px; border: 1px solid #ddd;">
+                                <option value="original">मूळ (Original)</option>
+                                <option value="16/9">16:9 (Wide)</option>
+                                <option value="4/3">4:3 (Standard)</option>
+                                <option value="1/1">1:1 (Square)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="msgVideo">व्हिडीओ लिंक (YouTube/Vimeo)</label>
+                        <input type="url" id="msgVideo" placeholder="https://youtube.com/watch?v=...">
+                    </div>
+
+                    <div id="videoAdjustments"
+                        style="display: none; border: 1px solid #eee; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                        <label style="font-size: 0.8rem; opacity: 0.7;">व्हिडीओ आकार (Size): <span
+                                id="vSizeVal">100</span>%</label>
+                        <input type="range" id="videoSize" min="50" max="100" value="100">
+                    </div>
+
+                    <div class="preview-area" id="livePreview" style="display: none; margin-bottom: 2rem;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1rem; color: var(--accent);">लाईव्ह प्रिव्ह्यू</h3>
+                        <div style="border: 2px dashed var(--accent); padding: 1rem; border-radius: 10px;">
+                            <h4 id="prevTitle" style="color: var(--primary); margin-bottom: 0.5rem;"></h4>
+                            <div id="prevImgContainer"
+                                style="overflow: hidden; margin-bottom: 1rem; transition: all 0.3s;">
+                                <img id="prevImg" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <p id="prevContent" style="font-size: 0.9rem; opacity: 0.8;"></p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit">अपडेट करा</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="premium-footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Dnit Office Soutions, Karanja. सर्व हक्क राखीव.</p>
+        </div>
+    </footer>
+
+    <script>
+        const adminForm = document.getElementById('adminForm');
+        const livePreview = document.getElementById('livePreview');
+        const imgAdjustments = document.getElementById('imageAdjustments');
+        const videoAdjustments = document.getElementById('videoAdjustments');
+
+        // Update Preview Real-time
+        function updatePreview() {
+            document.getElementById('prevTitle').innerText = document.getElementById('msgTitle').value;
+            document.getElementById('prevContent').innerText = document.getElementById('msgContent').value;
+
+            const size = document.getElementById('imgSize').value;
+            const ratio = document.getElementById('imgRatio').value;
+            const container = document.getElementById('prevImgContainer');
+
+            document.getElementById('sizeVal').innerText = size;
+            container.style.width = size + '%';
+            container.style.margin = '0 auto 1rem auto';
+
+            if (ratio === 'original') {
+                container.style.aspectRatio = 'auto';
+            } else {
+                container.style.aspectRatio = ratio.replace('/', ' / ');
+            }
+
+            if (document.getElementById('msgTitle').value || document.getElementById('msgContent').value || document.getElementById('prevImg').src) {
+                livePreview.style.display = 'block';
+            }
+        }
+
+        ['msgTitle', 'msgContent', 'imgSize', 'imgRatio', 'videoSize'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updatePreview);
+        });
+
+        document.getElementById('msgImg').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    document.getElementById('prevImg').src = event.target.result;
+                    imgAdjustments.style.display = 'block';
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('msgVideo').addEventListener('input', function (e) {
+            if (e.target.value) {
+                videoAdjustments.style.display = 'block';
+            } else {
+                videoAdjustments.style.display = 'none';
+            }
+        });
+
+        adminForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const title = document.getElementById('msgTitle').value;
+            const content = document.getElementById('msgContent').value;
+            const video = document.getElementById('msgVideo').value;
+            const videoSize = document.getElementById('videoSize').value;
+            const imgSize = document.getElementById('imgSize').value;
+            const imgRatio = document.getElementById('imgRatio').value;
+            const imgBase64 = document.getElementById('prevImg').src;
+
+            const data = {
+                title: title,
+                content: content,
+                video: video,
+                videoSize: videoSize,
+                img: imgBase64.startsWith('data:') ? imgBase64 : null,
+                imgSize: imgSize,
+                imgRatio: imgRatio,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('officerDeskData', JSON.stringify(data));
+            alert('संदेश यशस्वीरित्या जतन केला आहे!');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+
+</html>

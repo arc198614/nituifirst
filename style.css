@@ -1,0 +1,249 @@
+:root {
+    --primary-h: 215;
+    --primary-s: 100%;
+    --primary-l: 25%;
+    /* Deep Blue */
+    --accent-h: 45;
+    --accent-s: 100%;
+    --accent-l: 50%;
+    /* Gold */
+
+    --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+    --accent: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+    --bg: hsl(210, 20%, 98%);
+    --text: hsl(215, 50%, 15%);
+    --white: #ffffff;
+    --glass: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Header Styles */
+.glass-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1rem 0;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    height: 60px;
+    width: auto;
+    border-radius: 50%;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav a {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+}
+
+.nav a:hover,
+.nav a.active {
+    color: var(--primary);
+    border-bottom-color: var(--accent);
+}
+
+/* Main Content Grid */
+.content {
+    flex: 1;
+    padding: 3rem 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+/* Officer Card Styles */
+.officer-card {
+    grid-column: span 2;
+    display: flex;
+    text-align: left;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem;
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.officer-img-wrapper {
+    flex-shrink: 0;
+    width: 180px;
+    height: 180px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 3px solid var(--accent);
+}
+
+.officer-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.officer-text {
+    flex: 1;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    background: var(--accent);
+    color: var(--primary);
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.read-more {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s;
+}
+
+.read-more:hover {
+    color: var(--accent);
+}
+
+.card-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.card h3 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.card p {
+    font-size: 0.95rem;
+    opacity: 0.7;
+    line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .nav ul {
+        gap: 1rem;
+    }
+
+    .title {
+        font-size: 1.4rem;
+    }
+
+    .logo {
+        height: 45px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .officer-card {
+        grid-column: span 1;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .officer-img-wrapper {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+    }
+
+    .content {
+        padding: 2rem 0;
+    }
+}
+
+/* Footer Styles */
+.premium-footer {
+    background: var(--primary);
+    color: var(--white);
+    padding: 2rem 0;
+    margin-top: auto;
+    text-align: center;
+    border-top: 4px solid var(--accent);
+}
+
+.footer-content p {
+    font-size: 1rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
