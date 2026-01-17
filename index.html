@@ -66,10 +66,10 @@
                 <script>
                     const SUPABASE_URL = 'https://wqiimtgghapvwxsmqpfi.supabase.co';
                     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaWltdGdnaGFwdnd4c21xcGZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2MzkzOTgsImV4cCI6MjA4NDIxNTM5OH0.Xlx4NES8640ufpoa-VqOjHVGxats7qBbsM1vHsnZxII';
-                    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
                     async function loadOfficerData() {
-                        const { data, error } = await supabase
+                        const { data, error } = await supabaseClient
                             .from('officer_messages')
                             .select('*')
                             .order('created_at', { ascending: false })
@@ -90,8 +90,7 @@
                                 img: data.image_data,
                                 imgSize: data.image_size,
                                 imgRatio: data.image_ratio,
-                                video: data.video_url,
-                                videoSize: data.video_size
+                                video: data.video_url
                             });
                         }
                     }
@@ -123,14 +122,14 @@
                             const vContainer = document.getElementById('videoContainer');
                             vContainer.style.display = 'block';
                             document.getElementById('displayVideo').href = data.video;
-                            vContainer.style.width = (data.videoSize || 100) + '%';
+                            vContainer.style.width = '100%';
                             vContainer.style.margin = '1rem auto 0 auto';
                         } else {
                             document.getElementById('videoContainer').style.display = 'none';
                         }
                     }
 
-                    supabase
+                    supabaseClient
                         .channel('public:officer_messages')
                         .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'officer_messages' }, payload => {
                             loadOfficerData();

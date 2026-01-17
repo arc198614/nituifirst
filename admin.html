@@ -171,7 +171,7 @@
     <script>
         const SUPABASE_URL = 'https://wqiimtgghapvwxsmqpfi.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndxaWltdGdnaGFwdnd4c21xcGZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2MzkzOTgsImV4cCI6MjA4NDIxNTM5OH0.Xlx4NES8640ufpoa-VqOjHVGxats7qBbsM1vHsnZxII';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        const SupabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const adminForm = document.getElementById('adminForm');
         const livePreview = document.getElementById('livePreview');
@@ -232,13 +232,12 @@
             const imgRatio = document.getElementById('imgRatio').value;
             const imgBase64 = document.getElementById('prevImg').src;
 
-            const { error } = await supabase
+            const { error } = await SupabaseClient
                 .from('officer_messages')
                 .insert([{
                     title: title,
                     content: content,
                     video_url: video,
-                    video_size: videoSize,
                     image_data: imgBase64.startsWith('data:') ? imgBase64 : null,
                     image_size: imgSize,
                     image_ratio: imgRatio
